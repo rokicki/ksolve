@@ -10,7 +10,7 @@ all: ksolve js
 # Use GCC for OpenMP support (parallelization), since clang doesn't support it.
 # Need to specify GCC version to avoid triggering clang on OSX. :-(
 ksolve:
-	g++-4.2 -o ksolve -O3 -fopenmp ./source/main.cpp
+	g++ -o ksolve -O3 -fopenmp ./source/main.cpp
 
 .PHONY: js
 js:

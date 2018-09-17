@@ -59,12 +59,20 @@ struct substate {
 	int size;
 };
 
+
+// Partial pruning tables now use hashtables, not std::Map.   10x speedup when used.
+// I use gp_hash_table, but unordered_map would have been OK too.  -- Marc Ringuette, Sept 2018
+
+struct vec_long_long_hash {
+	int operator()(std::vector<long long> x) const { return std::_Hash_bytes((void *)&x[0], x.size()*sizeof(long long), 0x5bd1e995); }
+};
+
 // part of a pruning table
 struct subprune{
 	std::vector<char> orientation;
 	std::vector<char> permutation;
-	std::map<std::vector<long long>, char> partialorientation;
-	std::map<std::vector<long long>, char> partialpermutation;
+	__gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_hash> partialorientation;
+	__gnu_pbds::gp_hash_table<std::vector<long long>, char, vec_long_long_hash> partialpermutation;
 	int partialpermutation_depth;
 	int partialorientation_depth;
 };
